@@ -4,7 +4,9 @@ Repo mirror of the Project Knowledge Library session note.
 
 ## Outcome
 
-The uploaded Botanica Interactive Terrarium Studio page is in this repository as `index.html`. It was committed on branch `lalit_cursor/upload-terrarium-studio-86a8` and opened as a pull request against `main`.
+The uploaded Botanica Interactive Terrarium Studio page is in this repository as `index.html`. It was committed on branch `lalit_cursor/upload-terrarium-studio-86a8` and opened as a pull request against `main`: https://github.com/lalitsonawane/bottanica-terrarium/pull/1
+
+Notion: https://app.notion.com/p/3f989f54d2c2819bbccdd0505b4ee2fe
 
 ## Key decisions
 
