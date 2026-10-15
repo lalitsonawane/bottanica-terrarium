@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 'unsafe-inline' is required: inline app script, inline on* handlers, and the Tailwind Play CDN injects a <style> tag -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://unpkg.com; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
     <title>Botanica — Interactive Terrarium Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Pinned Tailwind Play CDN build. No SRI: cdn.tailwindcss.com sends no CORS headers, so an integrity check would block the script. -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Pinned Phosphor icon stylesheets (only fill + bold weights are used) -->
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" integrity="sha384-pPVoXE8ft+zxKtxIDDI7SfTK6y95NHm4qa+hKEg/hs8VkjW5IP+9/dGOPCbDpUPl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" integrity="sha384-nblAP2mo2pVPyMQZDw9Xy9Cwgs9lowushAYep4w5+Q9kF4Ibf3n0B/gCMVdR+Vqy" crossorigin="anonymous">
     <style>
         :root {
             --font-display: 'Fraunces', serif;
@@ -148,38 +156,38 @@
         <!-- Ambience & Presets & Actions -->
         <div class="flex items-center gap-2">
             <!-- Lighting Switcher -->
-            <div class="glass-panel p-1 rounded-2xl shadow-sm flex items-center gap-1">
-                <button onclick="setTheme('morning')" id="btn-theme-morning" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm transition-all" title="Morning Sun">
+            <div class="glass-panel p-1 rounded-2xl shadow-sm flex items-center gap-1" role="group" aria-label="Lighting">
+                <button onclick="setTheme('morning')" id="btn-theme-morning" aria-label="Morning Sun lighting" aria-pressed="true" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm transition-all" title="Morning Sun">
                     <i class="ph-fill ph-sun text-sm"></i>
                     <span class="hidden md:inline">Morning</span>
                 </button>
-                <button onclick="setTheme('golden')" id="btn-theme-golden" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-all" title="Golden Hour">
+                <button onclick="setTheme('golden')" id="btn-theme-golden" aria-label="Golden Hour lighting" aria-pressed="false" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-all" title="Golden Hour">
                     <i class="ph-fill ph-sun-horizon text-sm text-orange-500"></i>
                     <span class="hidden md:inline">Sunset</span>
                 </button>
-                <button onclick="setTheme('midnight')" id="btn-theme-midnight" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-all" title="Firefly Night">
+                <button onclick="setTheme('midnight')" id="btn-theme-midnight" aria-label="Firefly Night lighting" aria-pressed="false" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-all" title="Firefly Night">
                     <i class="ph-fill ph-moon-stars text-sm text-indigo-400"></i>
                     <span class="hidden md:inline">Night</span>
                 </button>
-                <button onclick="setTheme('growlight')" id="btn-theme-growlight" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-all" title="UV Grow Lamp">
+                <button onclick="setTheme('growlight')" id="btn-theme-growlight" aria-label="UV Grow Lamp lighting" aria-pressed="false" class="theme-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-all" title="UV Grow Lamp">
                     <i class="ph-fill ph-lightbulb-filament text-sm text-fuchsia-400"></i>
                     <span class="hidden md:inline">UV Grow</span>
                 </button>
             </div>
 
             <!-- Interactive Mist Button -->
-            <button id="mistBtn" onclick="triggerMistSpray()" class="glass-panel px-3.5 py-2 rounded-2xl shadow-sm flex items-center gap-2 text-xs font-bold text-sky-600 dark:text-sky-400 hover:scale-105 active:scale-95 transition-all border border-sky-300/50">
+            <button id="mistBtn" onclick="triggerMistSpray()" aria-label="Mist water" class="glass-panel px-3.5 py-2 rounded-2xl shadow-sm flex items-center gap-2 text-xs font-bold text-sky-600 dark:text-sky-400 hover:scale-105 active:scale-95 transition-all border border-sky-300/50">
                 <i class="ph-fill ph-spray-bottle text-lg"></i>
                 <span class="hidden sm:inline">Mist Water</span>
             </button>
 
             <!-- Sound Toggle -->
-            <button id="soundToggleBtn" onclick="toggleAudio()" class="glass-panel p-2.5 rounded-2xl shadow-sm hover:scale-105 active:scale-95 transition-all" title="Toggle Sound Effects">
+            <button id="soundToggleBtn" onclick="toggleAudio()" aria-label="Sound effects" aria-pressed="true" class="glass-panel p-2.5 rounded-2xl shadow-sm hover:scale-105 active:scale-95 transition-all" title="Toggle Sound Effects">
                 <i id="soundIcon" class="ph-fill ph-speaker-high text-base text-emerald-600"></i>
             </button>
 
             <!-- Snapshot Export -->
-            <button onclick="exportSnapshot()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-2xl shadow-md flex items-center gap-1.5 text-xs font-semibold transition-all active:scale-95">
+            <button onclick="exportSnapshot()" aria-label="Download snapshot" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-2xl shadow-md flex items-center gap-1.5 text-xs font-semibold transition-all active:scale-95">
                 <i class="ph-bold ph-camera text-base"></i>
                 <span class="hidden sm:inline">Snapshot</span>
             </button>
@@ -192,28 +200,28 @@
         <!-- LEFT / BOTTOM CONTROL DOCK -->
         <aside class="glass-panel w-full lg:w-96 h-[40vh] lg:h-[82vh] rounded-3xl shadow-xl flex flex-col overflow-hidden z-20 order-2 lg:order-1">
             <!-- Category Tabs -->
-            <div class="grid grid-cols-6 gap-1 p-1.5 bg-black/5 dark:bg-white/5 border-b border-black/5 dark:border-white/10 text-[11px] font-semibold">
-                <button onclick="switchTab('vessels')" id="tab-vessels" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 bg-white dark:bg-slate-800 text-emerald-600 shadow-sm transition-all">
+            <div role="tablist" aria-label="Studio sections" class="grid grid-cols-6 gap-1 p-1.5 bg-black/5 dark:bg-white/5 border-b border-black/5 dark:border-white/10 text-[11px] font-semibold">
+                <button onclick="switchTab('vessels')" id="tab-vessels" role="tab" aria-selected="true" aria-controls="panel-vessels" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 bg-white dark:bg-slate-800 text-emerald-600 shadow-sm transition-all">
                     <i class="ph-fill ph-jar text-base"></i>
                     <span>Vessel</span>
                 </button>
-                <button onclick="switchTab('soil')" id="tab-soil" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
+                <button onclick="switchTab('soil')" id="tab-soil" role="tab" aria-selected="false" aria-controls="panel-soil" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
                     <i class="ph-fill ph-stack text-base"></i>
                     <span>Layers</span>
                 </button>
-                <button onclick="switchTab('plants')" id="tab-plants" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
+                <button onclick="switchTab('plants')" id="tab-plants" role="tab" aria-selected="false" aria-controls="panel-plants" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
                     <i class="ph-fill ph-plant text-base"></i>
                     <span>Flora</span>
                 </button>
-                <button onclick="switchTab('hardscape')" id="tab-hardscape" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
+                <button onclick="switchTab('hardscape')" id="tab-hardscape" role="tab" aria-selected="false" aria-controls="panel-hardscape" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
                     <i class="ph-fill ph-mountains text-base"></i>
                     <span>Stones</span>
                 </button>
-                <button onclick="switchTab('critters')" id="tab-critters" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
+                <button onclick="switchTab('critters')" id="tab-critters" role="tab" aria-selected="false" aria-controls="panel-critters" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
                     <i class="ph-fill ph-butterfly text-base"></i>
                     <span>Decor</span>
                 </button>
-                <button onclick="switchTab('presets')" id="tab-presets" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
+                <button onclick="switchTab('presets')" id="tab-presets" role="tab" aria-selected="false" aria-controls="panel-presets" class="tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all">
                     <i class="ph-fill ph-magic-wand text-base"></i>
                     <span>Presets</span>
                 </button>
@@ -223,7 +231,7 @@
             <div class="flex-1 overflow-y-auto p-3.5 space-y-4" id="tabContentContainer">
 
                 <!-- 1. VESSELS TAB -->
-                <div id="panel-vessels" class="tab-panel space-y-3">
+                <div id="panel-vessels" role="tabpanel" aria-labelledby="tab-vessels" class="tab-panel space-y-3">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xs font-bold uppercase tracking-wider opacity-60">Choose Glass Container</h2>
                         <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
@@ -235,7 +243,7 @@
                 </div>
 
                 <!-- 2. SUBSTRATE LAYERS TAB -->
-                <div id="panel-soil" class="tab-panel hidden space-y-3.5">
+                <div id="panel-soil" role="tabpanel" aria-labelledby="tab-soil" class="tab-panel hidden space-y-3.5">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xs font-bold uppercase tracking-wider opacity-60">Substrate Depth & Contours</h2>
                         <button onclick="resetSubstrates()" class="text-[11px] font-semibold text-emerald-600 hover:underline">Reset Balanced</button>
@@ -244,15 +252,15 @@
                     <div id="substrateSliders" class="space-y-3"></div>
                     <div class="pt-2 border-t border-black/10 dark:border-white/10">
                         <div class="flex justify-between text-xs font-semibold mb-1">
-                            <span>Surface Hill Slope</span>
+                            <label for="soilSlopeSlider">Surface Hill Slope</label>
                             <span id="slopeValueLabel">Natural Wave</span>
                         </div>
-                        <input type="range" id="soilSlopeSlider" min="-35" max="35" value="12" oninput="updateSoilContour(this.value)" class="w-full">
+                        <input type="range" id="soilSlopeSlider" min="-35" max="35" value="12" aria-describedby="slopeValueLabel" oninput="updateSoilContour(this.value)" class="w-full">
                     </div>
                 </div>
 
                 <!-- 3. PLANTS / FLORA TAB -->
-                <div id="panel-plants" class="tab-panel hidden space-y-3">
+                <div id="panel-plants" role="tabpanel" aria-labelledby="tab-plants" class="tab-panel hidden space-y-3">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xs font-bold uppercase tracking-wider opacity-60">Botanical Specimens</h2>
                         <span class="text-[11px] opacity-60">Click or Drag into Jar</span>
@@ -261,7 +269,7 @@
                 </div>
 
                 <!-- 4. HARDSCAPE TAB -->
-                <div id="panel-hardscape" class="tab-panel hidden space-y-3">
+                <div id="panel-hardscape" role="tabpanel" aria-labelledby="tab-hardscape" class="tab-panel hidden space-y-3">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xs font-bold uppercase tracking-wider opacity-60">Rocks, Crystals & Driftwood</h2>
                         <span class="text-[11px] opacity-60">Click or Drag into Jar</span>
@@ -270,7 +278,7 @@
                 </div>
 
                 <!-- 5. CRITTERS & MINIATURES TAB -->
-                <div id="panel-critters" class="tab-panel hidden space-y-3">
+                <div id="panel-critters" role="tabpanel" aria-labelledby="tab-critters" class="tab-panel hidden space-y-3">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xs font-bold uppercase tracking-wider opacity-60">Forest Critters & Miniatures</h2>
                         <span class="text-[11px] opacity-60">Click or Drag into Jar</span>
@@ -279,7 +287,7 @@
                 </div>
 
                 <!-- 6. PRESETS & RESET TAB -->
-                <div id="panel-presets" class="tab-panel hidden space-y-3">
+                <div id="panel-presets" role="tabpanel" aria-labelledby="tab-presets" class="tab-panel hidden space-y-3">
                     <h2 class="text-xs font-bold uppercase tracking-wider opacity-60">Curated Biome Templates</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
                         <button onclick="loadBiomePreset('rainforest')" class="p-3 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 flex items-center gap-3 text-left transition-all">
@@ -337,30 +345,30 @@
                 <!-- Scale Slider -->
                 <div class="flex items-center gap-1.5 text-xs">
                     <i class="ph-bold ph-arrows-out-simple opacity-60" title="Size"></i>
-                    <input type="range" id="itemScaleInput" min="0.4" max="2.2" step="0.05" value="1" oninput="updateSelectedTransform('scale', this.value)" class="w-16 sm:w-20">
+                    <input type="range" id="itemScaleInput" aria-label="Item size" min="0.4" max="2.2" step="0.05" value="1" oninput="updateSelectedTransform('scale', this.value)" class="w-16 sm:w-20">
                 </div>
 
                 <!-- Rotation Slider -->
                 <div class="flex items-center gap-1.5 text-xs">
                     <i class="ph-bold ph-arrows-clockwise opacity-60" title="Rotation"></i>
-                    <input type="range" id="itemRotateInput" min="-180" max="180" step="2" value="0" oninput="updateSelectedTransform('rotation', this.value)" class="w-16 sm:w-20">
+                    <input type="range" id="itemRotateInput" aria-label="Item rotation" min="-180" max="180" step="2" value="0" oninput="updateSelectedTransform('rotation', this.value)" class="w-16 sm:w-20">
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex items-center gap-1 pl-1 border-l border-black/10 dark:border-white/10">
-                    <button onclick="flipSelectedItem()" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Flip Horizontal">
+                    <button onclick="flipSelectedItem()" aria-label="Flip horizontal" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Flip Horizontal">
                         <i class="ph-bold ph-flip-horizontal text-sm"></i>
                     </button>
-                    <button onclick="shiftSelectedLayer(1)" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Bring Forward">
+                    <button onclick="shiftSelectedLayer(1)" aria-label="Bring forward" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Bring Forward">
                         <i class="ph-bold ph-arrow-fat-lines-up text-sm"></i>
                     </button>
-                    <button onclick="shiftSelectedLayer(-1)" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Send Backward">
+                    <button onclick="shiftSelectedLayer(-1)" aria-label="Send backward" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Send Backward">
                         <i class="ph-bold ph-arrow-fat-lines-down text-sm"></i>
                     </button>
-                    <button onclick="duplicateSelectedItem()" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Duplicate">
+                    <button onclick="duplicateSelectedItem()" aria-label="Duplicate item" class="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition" title="Duplicate">
                         <i class="ph-bold ph-copy text-sm"></i>
                     </button>
-                    <button onclick="deleteSelectedItem()" class="p-1.5 rounded-lg bg-rose-500/15 text-rose-600 hover:bg-rose-500/30 transition" title="Remove Item (Delete)">
+                    <button onclick="deleteSelectedItem()" aria-label="Remove item" class="p-1.5 rounded-lg bg-rose-500/15 text-rose-600 hover:bg-rose-500/30 transition" title="Remove Item (Delete)">
                         <i class="ph-bold ph-trash text-sm"></i>
                     </button>
                 </div>
@@ -378,7 +386,7 @@
     <div id="dragGhost" class="fixed pointer-events-none z-50 hidden -translate-x-1/2 -translate-y-1/2 w-20 h-20 flex items-center justify-center filter drop-shadow-xl"></div>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toastBanner" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2 glass-panel px-4 py-2 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 border border-emerald-500/30">
+    <div id="toastBanner" role="status" aria-live="polite" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2 glass-panel px-4 py-2 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 border border-emerald-500/30">
         <i class="ph-fill ph-check-circle text-emerald-500 text-base"></i>
         <span id="toastText">Saved!</span>
     </div>
@@ -470,6 +478,7 @@
             icon.className = SoundFX.enabled
                 ? 'ph-fill ph-speaker-high text-base text-emerald-600'
                 : 'ph-fill ph-speaker-slash text-base text-slate-400';
+            document.getElementById('soundToggleBtn').setAttribute('aria-pressed', String(SoundFX.enabled));
             showToast(SoundFX.enabled ? 'Studio Audio Enabled' : 'Studio Audio Muted');
         }
 
@@ -1012,7 +1021,7 @@
             container.innerHTML = VESSELS.map(v => {
                 const active = v.id === state.vesselId;
                 return `
-                <button onclick="selectVessel('${v.id}')" class="p-3 rounded-2xl border text-left transition-all flex items-center gap-3 ${active ? 'bg-emerald-600/15 border-emerald-500 shadow-sm' : 'bg-white/50 dark:bg-slate-800/40 border-black/5 dark:border-white/10 hover:bg-emerald-500/10'}">
+                <button onclick="selectVessel('${v.id}')" aria-pressed="${active}" class="p-3 rounded-2xl border text-left transition-all flex items-center gap-3 ${active ? 'bg-emerald-600/15 border-emerald-500 shadow-sm' : 'bg-white/50 dark:bg-slate-800/40 border-black/5 dark:border-white/10 hover:bg-emerald-500/10'}">
                     <div class="w-9 h-9 rounded-xl ${active ? 'bg-emerald-600 text-white' : 'bg-emerald-500/15 text-emerald-600'} flex items-center justify-center shrink-0">
                         <i class="ph-fill ph-jar text-lg"></i>
                     </div>
@@ -1035,7 +1044,7 @@
                         </div>
                         <span id="depth-val-${layer.id}" class="opacity-70 font-mono text-[11px]">${layer.depth}mm</span>
                     </div>
-                    <input type="range" min="0" max="75" value="${layer.depth}"
+                    <input type="range" min="0" max="75" value="${layer.depth}" aria-label="${layer.name} depth (mm)"
                         oninput="updateSubstrateDepth('${layer.id}', this.value)" class="w-full">
                 </div>
             `).join('');
@@ -1061,9 +1070,11 @@
 
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.className = 'tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 opacity-70 hover:opacity-100 transition-all';
+                btn.setAttribute('aria-selected', 'false');
             });
             const activeBtn = document.getElementById(`tab-${tabId}`);
             activeBtn.className = 'tab-btn py-2 rounded-xl flex flex-col items-center gap-0.5 bg-white dark:bg-slate-800 text-emerald-600 shadow-sm transition-all';
+            activeBtn.setAttribute('aria-selected', 'true');
         }
 
         /********************************************************************
@@ -1073,7 +1084,18 @@
             state.vesselId = id;
             SoundFX.playGlassTap();
             renderVesselGrid();
+            syncCorkToggle();
             updateHarmonyScore();
+        }
+
+        // Disable the cork checkbox for vessels that have no cork closure
+        function syncCorkToggle() {
+            const vessel = VESSELS.find(v => v.id === state.vesselId) || VESSELS[0];
+            const toggle = document.getElementById('corkLidToggle');
+            toggle.checked = state.showCork;
+            toggle.disabled = !vessel.hasCork;
+            toggle.closest('label').classList.toggle('opacity-50', !vessel.hasCork);
+            toggle.closest('label').classList.toggle('cursor-pointer', vessel.hasCork);
         }
 
         function toggleCorkLid(checked) {
@@ -1093,6 +1115,15 @@
 
         function updateSoilContour(val) {
             state.soilSlope = parseInt(val, 10);
+            updateSlopeLabel();
+        }
+
+        function syncSlopeControls() {
+            document.getElementById('soilSlopeSlider').value = state.soilSlope;
+            updateSlopeLabel();
+        }
+
+        function updateSlopeLabel() {
             const label = document.getElementById('slopeValueLabel');
             if (state.soilSlope === 0) label.textContent = 'Flat Horizon';
             else if (state.soilSlope > 0) label.textContent = `Right Mound (+${state.soilSlope})`;
@@ -1103,7 +1134,7 @@
             const defaults = { gravel: 28, charcoal: 14, moss: 18, soil: 48, sand: 10 };
             state.substrates.forEach(s => s.depth = defaults[s.id]);
             state.soilSlope = 12;
-            document.getElementById('soilSlopeSlider').value = 12;
+            syncSlopeControls();
             renderSubstrateControls();
             SoundFX.playPlop(300);
             updateHarmonyScore();
@@ -1113,11 +1144,17 @@
             state.theme = themeName;
             document.body.className = `theme-${themeName} h-screen w-screen flex flex-col justify-between transition-colors duration-700 overflow-hidden select-none`;
 
+            document.documentElement.classList.toggle('dark', themeName === 'midnight' || themeName === 'growlight');
+
             document.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+                btn.setAttribute('aria-pressed', 'false');
             });
             const active = document.getElementById(`btn-theme-${themeName}`);
-            if (active) active.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+            if (active) {
+                active.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+                active.setAttribute('aria-pressed', 'true');
+            }
             SoundFX.playPlop(420);
         }
 
@@ -1203,6 +1240,7 @@
 
             window.addEventListener('pointermove', onCatalogDragMove);
             window.addEventListener('pointerup', onCatalogDragEnd);
+            window.addEventListener('pointercancel', onCatalogDragCancel);
         }
 
         function onCatalogDragMove(e) {
@@ -1237,21 +1275,70 @@
                 }
             } else {
                 // Simple click: auto-place cleanly on top of the current soil surface
-                const surfaceY = getSoilSurfaceNormalizedY();
                 const randomX = (Math.random() - 0.5) * 0.75;
+                const surfaceY = getSoilSurfaceNormalizedY(randomX);
                 addItemToJar(activeCatalogDrag.category, activeCatalogDrag.itemDef, randomX, surfaceY - 0.12);
             }
 
+            endCatalogDrag();
+        }
+
+        // Browser aborted the gesture (e.g. scroll takeover, OS interrupt): drop nothing
+        function onCatalogDragCancel() {
+            if (!activeCatalogDrag) return;
+            document.getElementById('dragGhost').classList.add('hidden');
+            endCatalogDrag();
+        }
+
+        function endCatalogDrag() {
             window.removeEventListener('pointermove', onCatalogDragMove);
             window.removeEventListener('pointerup', onCatalogDragEnd);
+            window.removeEventListener('pointercancel', onCatalogDragCancel);
             activeCatalogDrag = null;
         }
 
-        function getSoilSurfaceNormalizedY() {
-            const totalMm = state.substrates.reduce((sum, s) => sum + s.depth, 0);
-            // Bottom of vessel is around +0.92R; each mm maps to ~0.0068R
-            const heightNorm = Math.min(1.25, totalMm * 0.0068);
-            return 0.92 - heightNorm;
+        /*
+         * Shared substrate geometry, in normalized vessel units (multiples of R, relative to cy).
+         * Used by both item placement and drawSubstrateLayers so they always agree.
+         */
+        const SOIL_BOTTOM_NY = 0.94;
+        const SOIL_MM_TO_NORM = 1.15 / 180;
+        const SOIL_HALF_SPAN = 1.2;
+
+        function getSubstrateBands() {
+            const slope = (state.soilSlope / 35) * 0.22;
+            const bands = [];
+            let top = SOIL_BOTTOM_NY;
+            state.substrates.forEach((layer, idx) => {
+                if (layer.depth <= 0) return;
+                const depth = layer.depth * SOIL_MM_TO_NORM;
+                const nextTop = top - depth;
+                // Organic wave curve for top of this substrate layer
+                const hillFactor = (idx + 1) / state.substrates.length;
+                bands.push({
+                    layer, idx, depth,
+                    top: nextTop,
+                    leftY: nextTop + slope * hillFactor,
+                    rightY: nextTop - slope * hillFactor,
+                    ctrlY: nextTop - 0.06 * Math.sin(idx + 1)
+                });
+                top = nextTop;
+            });
+            return bands;
+        }
+
+        // Evaluates a band's quadratic top curve (control point at nx = 0) at normalized x
+        function soilBandY(band, nx) {
+            const t = Math.max(0, Math.min(1, (nx + SOIL_HALF_SPAN) / (2 * SOIL_HALF_SPAN)));
+            const u = 1 - t;
+            return u * u * band.leftY + 2 * u * t * band.ctrlY + t * t * band.rightY;
+        }
+
+        // Normalized y of the visible soil surface at normalized x, including slope
+        function getSoilSurfaceNormalizedY(nx = 0) {
+            const bands = getSubstrateBands();
+            if (!bands.length) return SOIL_BOTTOM_NY;
+            return Math.min(...bands.map(b => soilBandY(b, nx)));
         }
 
         function addItemToJar(category, itemDef, nx, ny) {
@@ -1424,7 +1511,8 @@
                 if (!silent) setTheme('midnight');
             }
 
-            document.getElementById('corkLidToggle').checked = state.showCork;
+            syncCorkToggle();
+            syncSlopeControls();
             renderVesselGrid();
             renderSubstrateControls();
             selectItem(null);
@@ -1482,6 +1570,8 @@
             // Keyboard shortcuts for deleting or nudging selected item
             window.addEventListener('keydown', (e) => {
                 if (!state.selectedUid) return;
+                const t = e.target;
+                if (t && (t.isContentEditable || ['INPUT', 'SELECT', 'TEXTAREA'].includes(t.tagName))) return;
                 if (e.key === 'Delete' || e.key === 'Backspace') {
                     deleteSelectedItem();
                 }
@@ -1669,28 +1759,19 @@
         }
 
         function drawSubstrateLayers(ctx, cx, cy, R) {
-            const bottomY = cy + R * 0.94;
-            let currentTopY = bottomY;
-            const mmScale = (R * 1.15) / 180; // scale mm to canvas pixels
-            const slopeOffset = (state.soilSlope / 35) * (R * 0.22);
+            const bottomY = cy + R * SOIL_BOTTOM_NY;
+            const span = R * SOIL_HALF_SPAN;
 
-            state.substrates.forEach((layer, idx) => {
-                if (layer.depth <= 0) return;
-                const layerPx = layer.depth * mmScale;
-                const nextTopY = currentTopY - layerPx;
-
-                // Organic wave curve for top of this substrate layer
-                const hillFactor = (idx + 1) / state.substrates.length;
-                const leftY = nextTopY + slopeOffset * hillFactor;
-                const rightY = nextTopY - slopeOffset * hillFactor;
-                const ctrlY = nextTopY - (R * 0.06) * Math.sin(idx + 1);
+            getSubstrateBands().forEach(({ layer, idx, depth, top, leftY, rightY, ctrlY }) => {
+                const layerPx = depth * R;
+                const nextTopY = cy + top * R;
 
                 ctx.save();
                 ctx.beginPath();
-                ctx.moveTo(cx - R * 1.2, leftY);
-                ctx.quadraticCurveTo(cx, ctrlY, cx + R * 1.2, rightY);
-                ctx.lineTo(cx + R * 1.2, bottomY + 20);
-                ctx.lineTo(cx - R * 1.2, bottomY + 20);
+                ctx.moveTo(cx - span, cy + leftY * R);
+                ctx.quadraticCurveTo(cx, cy + ctrlY * R, cx + span, cy + rightY * R);
+                ctx.lineTo(cx + span, bottomY + 20);
+                ctx.lineTo(cx - span, bottomY + 20);
                 ctx.closePath();
 
                 ctx.fillStyle = layer.color;
@@ -1710,7 +1791,6 @@
                 });
 
                 ctx.restore();
-                currentTopY = nextTopY;
             });
         }
 
